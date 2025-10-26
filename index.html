@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imposter Game - The Ultimate Deception Game</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/animations.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="bg-effects">
+        <div class="particles"></div>
+        <div class="glow"></div>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="mainMenu" class="screen active">
+        <div class="container">
+            <div class="logo">
+                <h1 class="glitch" data-text="IMPOSTER">IMPOSTER</h1>
+                <p class="subtitle">The Ultimate Deception Game</p>
+            </div>
+            
+            <div class="menu-buttons">
+                <button class="btn-primary pulse" onclick="showScreen('createGame')">
+                    <span class="btn-icon">🎮</span>
+                    CREATE GAME
+                </button>
+                <button class="btn-secondary" onclick="showScreen('joinGame')">
+                    <span class="btn-icon">🔗</span>
+                    JOIN GAME
+                </button>
+                <button class="btn-tertiary" onclick="showScreen('howToPlay')">
+                    <span class="btn-icon">❓</span>
+                    HOW TO PLAY
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Game -->
+    <div id="createGame" class="screen">
+        <div class="container">
+            <button class="back-btn" onclick="showScreen('mainMenu')">← BACK</button>
+            
+            <h2 class="section-title">CREATE NEW GAME</h2>
+            
+            <div class="form-container">
+                <div class="input-group">
+                    <label>Your Name</label>
+                    <input type="text" id="hostName" placeholder="Enter your name" maxlength="20">
+                </div>
+
+                <div class="settings-grid">
+                    <!-- Game Mode -->
+                    <div class="setting-card">
+                        <h3>🎯 GAME MODE</h3>
+                        <div class="radio-group">
+                            <label class="radio">
+                                <input type="radio" name="gameMode" value="classic" checked>
+                                <span class="radio-custom"></span>
+                                Classic
+                            </label>
+                            <label class="radio">
+                                <input type="radio" name="gameMode" value="hidden">
+                                <span class="radio-custom"></span>
+                                Hidden Imposter
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Language -->
+                    <div class="setting-card">
+                        <h3>🌐 LANGUAGE</h3>
+                        <select id="language">
+                            <option value="english">English</option>
+                            <option value="swedish">Swedish</option>
+                        </select>
+                    </div>
+
+                    <!-- Imposters -->
+                    <div class="setting-card">
+                        <h3>🎭 IMPOSTERS</h3>
+                        <div class="number-input">
+                            <button onclick="changeImposters(-1)">-</button>
+                            <span id="imposterCount">1</span>
+                            <button onclick="changeImposters(1)">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Theme -->
+                    <div class="setting-card">
+                        <h3>🎨 THEME</h3>
+                        <select id="theme">
+                            <option value="random">Random Theme</option>
+                            <option value="weather">Weather</option>
+                            <option value="animals">Animals</option>
+                            <option value="food">Food</option>
+                            <option value="technology">Technology</option>
+                            <option value="sports">Sports</option>
+                            <option value="movies">Movies</option>
+                            <option value="nature">Nature</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn-primary create-btn" onclick="createGame()">
+                    <span class="btn-icon">🚀</span>
+                    CREATE GAME
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Join Game -->
+    <div id="joinGame" class="screen">
+        <div class="container">
+            <button class="back-btn" onclick="showScreen('mainMenu')">← BACK</button>
+            
+            <h2 class="section-title">JOIN GAME</h2>
+            
+            <div class="form-container">
+                <div class="input-group">
+                    <label>Game Code</label>
+                    <input type="text" id="gameCode" placeholder="Enter 7-digit code" maxlength="7" pattern="[0-9]{7}">
+                </div>
+
+                <div class="input-group">
+                    <label>Your Name</label>
+                    <input type="text" id="playerName" placeholder="Enter your name" maxlength="20">
+                </div>
+
+                <button class="btn-primary" onclick="joinGame()">
+                    <span class="btn-icon">🎯</span>
+                    JOIN GAME
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lobby -->
+    <div id="lobby" class="screen">
+        <div class="container">
+            <div class="lobby-header">
+                <div class="game-info">
+                    <h2>LOBBY</h2>
+                    <div class="game-code">
+                        <span>GAME CODE:</span>
+                        <span id="lobbyCode" class="code-display"></span>
+                        <button class="copy-btn" onclick="copyGameCode()">📋</button>
+                    </div>
+                </div>
+                <div class="player-count">
+                    <span id="playerCount">0</span> PLAYERS
+                </div>
+            </div>
+
+            <div class="players-grid" id="playersList">
+                <!-- Players will be added here dynamically -->
+            </div>
+
+            <div class="lobby-controls">
+                <div class="settings-panel">
+                    <h3>GAME SETTINGS</h3>
+                    <div class="settings-display">
+                        <div>Mode: <span id="displayMode">Classic</span></div>
+                        <div>Language: <span id="displayLanguage">English</span></div>
+                        <div>Imposters: <span id="displayImposters">1</span></div>
+                        <div>Theme: <span id="displayTheme">Random</span></div>
+                    </div>
+                </div>
+
+                <button class="btn-start" id="startBtn" onclick="startGame()">
+                    <span class="btn-icon">⚡</span>
+                    START GAME
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Animation -->
+    <div id="loading" class="screen">
+        <div class="loading-container">
+            <div class="loading-animation">
+                <div class="spinner"></div>
+                <div class="pulse-ring"></div>
+                <div class="dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+            <h2 class="loading-text">PREPARING GAME</h2>
+            <p class="loading-subtext">Get ready for deception...</p>
+            <div class="music-controls">
+                <button id="muteBtn" class="music-btn" onclick="toggleMute()">🔇</button>
+                <div class="track-info" id="trackInfo">Now Playing: Suspense Theme</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="screen">
+        <div class="game-container">
+            <div class="game-header">
+                <div class="timer" id="gameTimer">05:00</div>
+                <div class="game-status" id="gameStatus">DISCUSS THE WORD!</div>
+                <button class="vote-btn" onclick="showVotingScreen()">🗳️ VOTE</button>
+            </div>
+
+            <div class="word-display">
+                <div class="word-card" id="wordCard">
+                    <h3>YOUR WORD IS:</h3>
+                    <div class="the-word" id="theWord">WORD</div>
+                    <div class="word-hint" id="wordHint"></div>
+                </div>
+            </div>
+
+            <div class="players-display" id="gamePlayers">
+                <!-- Players in game will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Voting Screen -->
+    <div id="votingScreen" class="screen">
+        <div class="voting-container">
+            <h2>VOTE OUT THE IMPOSTER</h2>
+            <p>Select who you think is the imposter:</p>
+            
+            <div class="voting-grid" id="votingGrid">
+                <!-- Voting options will be added here -->
+            </div>
+
+            <div class="voting-controls">
+                <button class="btn-secondary" onclick="hideVotingScreen()">Cancel</button>
+                <button class="btn-primary" onclick="submitVote()">Submit Vote</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="screen">
+        <div class="results-container">
+            <div class="result-card" id="resultCard">
+                <h2 id="resultTitle">GAME OVER</h2>
+                <div class="result-content" id="resultContent"></div>
+                <div class="result-actions">
+                    <button class="btn-primary" onclick="returnToLobby()">Play Again</button>
+                    <button class="btn-secondary" onclick="returnToMenu()">Main Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How to Play Screen -->
+    <div id="howToPlay" class="screen">
+        <div class="container">
+            <button class="back-btn" onclick="showScreen('mainMenu')">← BACK</button>
+            
+            <h2 class="section-title">HOW TO PLAY</h2>
+            
+            <div class="instructions-container">
+                <div class="instruction-card">
+                    <h3>🎯 Objective</h3>
+                    <p>Find the imposters among you! Innocent players know the secret word, while imposters try to blend in without knowing it.</p>
+                </div>
+                
+                <div class="instruction-card">
+                    <h3>👑 Creating a Game</h3>
+                    <p>As host, create a game and share the 7-digit code with friends. Configure game settings like mode, language, and number of imposters.</p>
+                </div>
+                
+                <div class="instruction-card">
+                    <h3>🔗 Joining a Game</h3>
+                    <p>Enter the game code provided by the host and choose your player name to join the lobby.</p>
+                </div>
+                
+                <div class="instruction-card">
+                    <h3>🎮 Game Modes</h3>
+                    <p><strong>Classic:</strong> Imposters don't know the word.<br>
+                    <strong>Hidden Imposter:</strong> Imposters get a different word to blend in better.</p>
+                </div>
+                
+                <div class="instruction-card">
+                    <h3>🗳️ Voting Phase</h3>
+                    <p>Discuss with other players and vote out suspected imposters. Innocents win if all imposters are eliminated. Imposters win if they outnumber the innocents.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="backgroundMusic" loop></audio>
+    <audio id="soundEffects"></audio>
+
+    <script src="scripts/effects.js"></script>
+    <script src="scripts/game.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>
